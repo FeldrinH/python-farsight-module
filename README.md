@@ -10,7 +10,7 @@
 <h1 align="center">🔭 Farsight 🔭</h1>
 
 >A simple passive memory reader which aims to retrieve information about League of Legends spectator games which the API does not provide.
-This a Python native module which utilizes native memory reading. This is based on https://github.com/floh22/native-farsight-module.
+This a Python native module which utilizes native memory reading. This is ported from https://github.com/floh22/native-farsight-module.
 
 Farsight uses Memory Reading to get information that the Riot API does not expose. Riot's policy in the past has been to allow passive memory reading, which is exactly what this program does, but this may change at any time.
 Use Farsight at your own risk. Anti Cheat does not ban for programs used during spectate, but it does however run while in a live game. Having Farsight open
