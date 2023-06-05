@@ -7,17 +7,10 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![Donate][donate-paypal]](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZSY2FXPUHXVUJ)
-
 <h1 align="center">🔭 Farsight 🔭</h1>
 
 >A simple passive memory reader which aims to retrieve information about League of Legends spectator games which the API does not provide.
-This a nodejs native module which utilizes native memory reading with a js interface.
+This a Python native module which utilizes native memory reading. This is based on https://github.com/floh22/native-farsight-module.
 
 Farsight uses Memory Reading to get information that the Riot API does not expose. Riot's policy in the past has been to allow passive memory reading, which is exactly what this program does, but this may change at any time.
 Use Farsight at your own risk. Anti Cheat does not ban for programs used during spectate, but it does however run while in a live game. Having Farsight open
@@ -59,10 +52,7 @@ If you need any extra unit information, create an [Issue][issues-url] in the for
 
 Roughly every two weeks League of Legends updates and its memory layout changes slightly, so offsets must be updated.
 
-Offsets will be updated within roughly 24-48 hours, though this may not always be the case. Keep in mind, this is an open source project maintained in free time, please do not harass me or others for offsets in the issues or anywhere else.
-You are welcome to assist and contribute to this project by updating the offsets yourselves and creating a pull request so others can use them.
-
-There is a [Text tutorial](https://github.com/floh22/LeagueBroadcast/tree/v2/LeagueBroadcast.Farsight) avaible which outlines the process. 
+This Python module uses offsets from https://github.com/floh22/native-farsight-module. See the [README](https://github.com/floh22/native-farsight-module#offsets) in that repository for more info.
 
 
 ---
