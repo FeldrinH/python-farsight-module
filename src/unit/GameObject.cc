@@ -4,6 +4,9 @@
 #include "../Offsets.h"
 #include <vector>
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 namespace py = pybind11;
 
 BYTE GameObject::buff[GameObject::sizeBuff] = {};
@@ -87,10 +90,8 @@ bool GameObject::IsChampion()
 py::dict GameObject::ToPyDict()
 {
     py::dict obj;
-    py::bytes nameBuffer(name.data(), name.size());
-    obj["name"] = nameBuffer;
-    py::bytes displayNameBuffer(displayName.data(), displayName.size());
-    obj["displayName"] = displayNameBuffer;
+    obj["name"] = PyUnicode_DecodeUTF8(name.data(), name.size(), "replace");
+    obj["displayName"] = PyUnicode_DecodeUTF8(displayName.data(), displayName.size(), "replace");
     obj["networkId"] = networkId;
     obj["objectIndex"] = objectIndex;
     py::tuple jsPosition = py::make_tuple(
