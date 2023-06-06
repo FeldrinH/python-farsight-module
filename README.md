@@ -10,7 +10,7 @@
 <h1 align="center">🔭 Farsight 🔭</h1>
 
 >A simple passive memory reader which aims to retrieve information about League of Legends spectator games which the API does not provide.
-This a Python native module which utilizes native memory reading. This is ported from https://github.com/floh22/native-farsight-module.
+This a Python native module which utilizes native memory reading. It is ported from https://github.com/floh22/native-farsight-module.
 
 Farsight uses Memory Reading to get information that the Riot API does not expose. Riot's policy in the past has been to allow passive memory reading, which is exactly what this program does, but this may change at any time.
 Use Farsight at your own risk. Anti Cheat does not ban for programs used during spectate, but it does however run while in a live game. Having Farsight open
@@ -31,9 +31,7 @@ during a live (non-spectate) game may lead to account bans incase checks to stop
 6. Misc game objects
 
 
-<p align="left">Each game object currently has the following data.
-If you need any extra unit information, create an [Issue][issues-url] in the form of a feature request.<p>
-<p align="left">!Not possible: Aggregate player stats: (Kills, Deaths, Assists, CS, Vision Score)!<p>
+<p align="left">Each game object currently has the following data:<p>
 
 1. Health/Max Health
 2. Mana/Max Mana
@@ -45,6 +43,9 @@ If you need any extra unit information, create an [Issue][issues-url] in the for
 8. Level / Experience
 
 (7 and 8 player only)
+
+If you need any extra unit information, create an issue in the form of a feature request. Feature requests should be made to the [upstream repo](https://github.com/floh22/native-farsight-module).
+<p align="left">Not possible: Aggregate player stats: (Kills, Deaths, Assists, CS, Vision Score)<p>
 
 ---
 
@@ -67,101 +68,9 @@ This Python module uses offsets from https://github.com/floh22/native-farsight-m
 
 ---
 
-<h2 align="center">Methods</h2>
-
-### connectToLeague
-
-- `[out] success: bool` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Operation sucess
-
-init library connection with the league process.
-
-
-### disconnectFromLeague
-
-- `[out] success: bool` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Operation sucess
-
-close library connection with the league process.
-
-### setOffsets
-
-```js
-var result = setOffsets({
-        gameTime: 0x316FDE4,
-        objIndex: 0x8,
-        objTeam: 0x34,
-        objNetworkID: 0xB4,
-        objPosition: 0x1DC,
-        objHealth: 0xE7C,
-        objMaxHealth: 0xE8C,
-        objMana: 0x029C,
-        objMaxMana: 0x2AC,
-        objName: 0x2DB4,
-        objLvl: 0x35A4,
-        objExperience: 0x3594,
-        objCurrentGold: 0x1BB4,
-        objTotalGold: 0x1BC4,
-        objDisplayName: 0x54,
-        objDisplayNameLength: 0x64,
-
-
-        objectManager: 0x18D9ACC,
-        objectMapCount: 0x2C,
-        objectMapRoot: 0x28,
-        objectMapNodeNetId: 0x10,
-        objectMapNodeObject: 0x14,
-
-        heroList: 0x18D9B6C,
-        minionList: 0x252729C,
-        turretList: 0X316EAC4,
-        inhibitorList: 0x0
-    });
-```
-
-- `[in] offsets: Object` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An object containing the needed offsets. Object format can be seen in code example
-- `[out] success: bool` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Operation sucess
-
-Sets the offsets used for memory reading. Must be done before any snapshot is requested, otherwise snapshot creation fails. Currently cannot be reset once set.
-
-
-### setChampionNames
-
-- `[in] champions: string[]` &nbsp;A lowercase list of all champion names/ids
-- `[out] success: bool` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Operation sucess
-
-Sets the list of champions to scan for. Most common usage will be to use a full list of all champions currently in League of Legends. List must be lower case! Currently cannot be reset once set.
- 
-### isReady
-
-- `[out] ready state: bool` &nbsp;&nbsp;&nbsp;Library readiness state.
-
-Wether or not the library is ready to create Snapshots
-
-### makeSnapshot
-
-- `[out] snapshot: Object` &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Snapshot object containing current game state information
-
-
-Creates a snapshot of all game objects currently in game. Farsight must be connected, as well as champion list and offsets provided.
-
-## Members
-
-### autoImportChampions
-
-- `boolean`: Wether or not Farsight should automatically fetch the current list of all champions from [Community Dragon](https://communitydragon.org/). This takes place on `connectToLeague`.
-
-True by default. If set to false, you must provide the list before requesting a snapshot.
-
-### autoImportOffsets
-
-- `boolean`: Wether or not Farsight should automatically fetch the current offsets from this repository. Repository currently not configurable! This takes place on `connectToLeague`.
-
-True by default. If set to false, you must provide offsets before requesting a snapshot.
-
----
-
 <h2 align="center">Example</h2>
 
-Example usage is provided in the example folder of this repo. It currently contains a very basic console logger which conntects and prints the snapshot to the console. In case you write a simple use case using this library, please feel free to create a PR to add your example to this folder.
+Example usage is provided in the example folder of this repo. It currently contains a very basic console logger which conntects and prints the snapshot to the console.
 
 
 ---

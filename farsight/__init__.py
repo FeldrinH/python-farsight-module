@@ -11,8 +11,6 @@ _game_version = None
 
 _version_cleaning_regex = re.compile(r"[^\d.]")
 
-# TODO: Print log messages if functions exit early because they have already been called?
-
 def connect_to_league():
     global _connected
     if _connected:
@@ -25,7 +23,7 @@ def connect_to_league():
     if not _champions_set:
         _import_champions()
     
-    _impl.connectToLeague() # type: ignore
+    _impl.connectToLeague()
     _connected = True
 
 def disconnect_from_league():
@@ -33,7 +31,7 @@ def disconnect_from_league():
     if not _connected:
         print("Warning: disconnect_from_league called while not connected")
 
-    _impl.disconnectFromLeague() # type: ignore
+    _impl.disconnectFromLeague()
     _connected = False
 
 def make_snapshot() -> dict:
@@ -41,7 +39,7 @@ def make_snapshot() -> dict:
         raise RuntimeError("Not connected to league! Cannot create snapshot.")
 
     try:
-        return _impl.makeSnapshot() # type: ignore
+        return _impl.makeSnapshot()
     except Exception:
         # Exceptions here generally mean LoL has closed. Disconnect automatically.
         disconnect_from_league()
@@ -57,7 +55,7 @@ def _import_offsets():
 
     print(f"Game version: {'.'.join(_game_version)}")
 
-    url = _get_patch_url(_game_version) # type: ignore
+    url = _get_patch_url(_game_version)
     offsets_data: dict = _fetch_json(url)
     offsets = {k: int(v, 0) for k, v in offsets_data.items()}
 
@@ -101,10 +99,10 @@ def set_version(version: list[str]):
 
 def set_offsets(offsets: dict[str, int]):
     global _offsets_set
-    _impl.setOffsets(offsets) # type: ignore
+    _impl.setOffsets(offsets)
     _offsets_set = True
 
 def set_champions(champions: list[str]):
     global _champions_set
-    _impl.setChampionNames(champions) # type: ignore
+    _impl.setChampionNames(champions)
     _champions_set = True
