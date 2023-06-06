@@ -48,6 +48,12 @@ If you need any extra unit information, create an [Issue][issues-url] in the for
 
 ---
 
+<h2 align="center">Installation</h2>
+
+Run `pip install git+https://github.com/FeldrinH/python-farsight-module.git@main` to install latest version.
+
+---
+
 <h2 align="center">Offsets</h2>
 
 Roughly every two weeks League of Legends updates and its memory layout changes slightly, so offsets must be updated.
