@@ -17,7 +17,8 @@ _version_cleaning_regex = re.compile(r"[^\d.]")
 def connect_to_league():
     global _connected
     if _connected:
-        raise RuntimeError("Already connected to league! Cannot connect.")
+        print("Warning: connect_to_league called while already connected")
+        return
     
     if not _offsets_set:
         _import_offsets()
@@ -31,7 +32,7 @@ def connect_to_league():
 def disconnect_from_league():
     global _connected
     if not _connected:
-        raise RuntimeError("Not connected to league! Cannot disconnect.")
+        print("Warning: disconnect_from_league called while not connected")
 
     _impl.disconnectFromLeague() # type: ignore
     _connected = False
@@ -84,6 +85,8 @@ def _get_patch_url(version: list[int]) -> str:
     
     if latest_patch_file is None:
         raise RuntimeError(f"Could not find offsets for game version {version}")
+
+    print(f"Found offsets for version {latest_patch_version}")
 
     return latest_patch_file['download_url']
 
