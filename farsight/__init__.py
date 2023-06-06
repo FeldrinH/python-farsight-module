@@ -1,6 +1,5 @@
-import json
 import re
-import urllib.request
+import requests
 from . import _impl
 
 offset_repository = "https://api.github.com/repos/floh22/native-farsight-module/contents/offsets?ref=main"
@@ -54,13 +53,13 @@ def is_ready() -> bool:
 def _import_offsets():
     if _game_version is None:
         version_data: dict = _fetch_json('https://raw.communitydragon.org/latest/content-metadata.json')
-        set_version(_parse_version(version_data['version']))
+        set_version(version_data['version'].split('.'))
 
-    print(f"Game version: {_game_version}")
+    print(f"Game version: {'.'.join(_game_version)}")
 
     url = _get_patch_url(_game_version) # type: ignore
     offsets_data: dict = _fetch_json(url)
-    offsets = {k: int(v) for k, v in offsets_data.items()}
+    offsets = {k: int(v, 0) for k, v in offsets_data.items()}
 
     set_offsets(offsets)
 
@@ -76,9 +75,9 @@ def _get_patch_url(version: list[int]) -> str:
     latest_patch_file = None
     latest_patch_version = -1
     for file in offsets_repo_data:
-        offset_version = _parse_version(_version_cleaning_regex.sub('', file['name']))
+        offset_version = _version_cleaning_regex.sub('', file['name']).split('.')
         if offset_version[:len(version)] == version:
-            offset_patch_version = offset_version[2]
+            offset_patch_version = int(offset_version[2])
             if latest_patch_file is None or offset_patch_version > latest_patch_version:
                 latest_patch_file = file
                 latest_patch_version = offset_patch_version
@@ -86,18 +85,16 @@ def _get_patch_url(version: list[int]) -> str:
     if latest_patch_file is None:
         raise RuntimeError(f"Could not find offsets for game version {version}")
 
-    print(f"Found offsets for version {latest_patch_version}")
+    print(f"Found offsets for version {'.'.join(version)}.{latest_patch_version}")
 
     return latest_patch_file['download_url']
 
 def _fetch_json(url: str):
-    with urllib.request.urlopen(url) as r:
-        return json.load(r)
+    res = requests.get(url)
+    res.raise_for_status()
+    return res.json()
 
-def _parse_version(version: str):
-    return [int(v) for v in version.split('.')]
-
-def set_version(version: list[int]):
+def set_version(version: list[str]):
     global _game_version
     # Keep only first two numbers of version, because the last one does not need to match when finding a suitable offset
     _game_version = version[:2]
