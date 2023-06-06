@@ -52,6 +52,10 @@ If you need any extra unit information, create an [Issue][issues-url] in the for
 
 Run `pip install git+https://github.com/FeldrinH/python-farsight-module.git@main` to install latest version.
 
+Note: Installation requires Visual Studio Build Tools 2017 or newer with the C++ desktop development workload.
+
+The library is tested on Python 3.10 and 3.11. Python 3.9 and 3.12+ *should* be supported, but are untested.
+
 ---
 
 <h2 align="center">Offsets</h2>
