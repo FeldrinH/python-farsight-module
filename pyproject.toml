@@ -1,7 +1,7 @@
 [project]
 name = "farsight"
-version = "0.1.0"
-dependencies = ["requests==2.*"]
+version = "0.1.1"
+dependencies = ["requests~=2.15"]
 
 [build-system]
 requires = ["setuptools>=42", "wheel", "pybind11~=2.10.4"]

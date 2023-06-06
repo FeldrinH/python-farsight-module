@@ -87,21 +87,21 @@ bool GameObject::IsChampion()
 py::dict GameObject::ToPyDict()
 {
     py::dict obj;
-    py::str nameBuffer(name.data(), name.size());
-    obj["name"] = nameBuffer;
-    py::str displayNameBuffer(displayName.data(), displayName.size());
-    obj["displayName"] = displayNameBuffer;
-    obj["networkId"] = py::int_(networkId);
-    obj["objectIndex"] = py::int_(objectIndex);
+    //py::str nameBuffer(name.data(), name.size());
+    obj["name"] = "<TODO>";
+    //py::str displayNameBuffer(displayName.data(), displayName.size());
+    obj["displayName"] = "<TODO>";
+    obj["networkId"] = networkId;
+    obj["objectIndex"] = objectIndex;
     py::tuple jsPosition = py::make_tuple(
-        py::float_(position[0]),
-        py::float_(position[1]),
-        py::float_(position[2])
+        position[0],
+        position[1],
+        position[2]
     );
     obj["position"] = jsPosition;
-    obj["team"] = py::int_(team);
-    obj["isAlive"] = py::bool_(isAlive);
-    obj["health"] = py::float_(health);
+    obj["team"] = team;
+    obj["isAlive"] = isAlive;
+    obj["health"] = health;
     obj["maxHealth"] = maxHealth;
     obj["mana"] = mana;
     obj["maxMana"] = maxMana;
