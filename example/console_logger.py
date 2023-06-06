@@ -1,6 +1,5 @@
 import pprint
 import time
-import traceback
 import farsight
 
 while True:
@@ -12,7 +11,6 @@ while True:
         snapshot = farsight.make_snapshot()
         pprint.pprint(snapshot)
     except Exception as e:
-        print("Failed to make snapshot:")
-        traceback.print_exc()
+        print(f"Failed to make snapshot: {type(e).__name__}: {e}")
 
     time.sleep(1)
