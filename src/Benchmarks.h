@@ -1,5 +1,5 @@
 #pragma once
-#include <napi.h>
+#include <pybind11/pybind11.h>
 
 struct ReadBenchmark
 {
@@ -7,11 +7,11 @@ struct ReadBenchmark
     float fullUpdateMs;
 
 
-    inline Napi::Object ToNapiObject(Napi::Env env)
+    inline py::dict ToPyDict()
     {
-        Napi::Object obj = Napi::Object::New(env);
-        obj.Set("readObjectsMs", readObjectsMs);
-        obj.Set("fullUpdateMs", fullUpdateMs);
+        py::dict obj;
+        obj["readObjectsMs"] = readObjectsMs;
+        obj["fullUpdateMs"] = fullUpdateMs;
         return obj;
     }
 };

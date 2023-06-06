@@ -3,11 +3,9 @@
 #include <limits>
 #include <stdexcept>
 #include <chrono>
-#include <napi.h>
 #include "Offsets.h"
 #include "unit/GameObject.h"
 #include "Farsight.h"
-#include "windows.h"
 #include "psapi.h"
 #include "Utils.h"
 

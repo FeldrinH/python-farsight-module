@@ -8,6 +8,8 @@
 #include "unit/GameObject.h"
 #include "Benchmarks.h"
 
+namespace py = pybind11;
+
 struct Snapshot
 {
     std::vector<std::shared_ptr<GameObject>> champions;
@@ -27,48 +29,48 @@ struct Snapshot
 
     std::unique_ptr<ReadBenchmark> benchmark = std::unique_ptr<ReadBenchmark>(new ReadBenchmark());
 
-    Napi::Object ToNapiObject(Napi::Env env)
+    py::dict ToPyDict()
     {
-        Napi::Object obj = Napi::Object::New(env);
+        py::dict obj;
 
-        Napi::Array champions = Napi::Array::New(env, this->champions.size());
+        py::list champions(this->champions.size());
         for (int i = 0; i < this->champions.size(); i++)
         {
-            champions[i] = this->champions[i]->ToNapiObject(env);
+            champions[i] = this->champions[i]->ToPyDict();
         }
-        obj.Set("champions", champions);
+        obj["champions"] = champions;
 
-        Napi::Array jungle = Napi::Array::New(env, this->jungle.size());
+        py::list jungle(this->jungle.size());
         for (int i = 0; i < this->jungle.size(); i++)
         {
-            jungle[i] = this->jungle[i]->ToNapiObject(env);
+            jungle[i] = this->jungle[i]->ToPyDict();
         }
-        obj.Set("jungle", jungle);
+        obj["jungle"] = jungle;
 
-        Napi::Array turrets = Napi::Array::New(env, this->turrets.size());
+        py::list turrets(this->turrets.size());
         for (int i = 0; i < this->turrets.size(); i++)
         {
-            turrets[i] = this->turrets[i]->ToNapiObject(env);
+            turrets[i] = this->turrets[i]->ToPyDict();
         }
-        obj.Set("turrets", turrets);
+        obj["turrets"] = turrets;
 
-        Napi::Array inhibitors = Napi::Array::New(env, this->inhibitors.size());
+        py::list inhibitors(this->inhibitors.size());
         for (int i = 0; i < this->inhibitors.size(); i++)
         {
-            inhibitors[i] = this->inhibitors[i]->ToNapiObject(env);
+            inhibitors[i] = this->inhibitors[i]->ToPyDict();
         }
-        obj.Set("inhibitors", inhibitors);
+        obj["inhibitors"] = inhibitors;
 
-        Napi::Array other = Napi::Array::New(env, this->other.size());
+        py::list other(this->other.size());
         for (int i = 0; i < this->other.size(); i++)
         {
-            other[i] = this->other[i]->ToNapiObject(env);
+            other[i] = this->other[i]->ToPyDict();
         }
-        obj.Set("other", other);
+        obj["other"] = other;
 
-        obj.Set("gameTime", this->gameTime);
+        obj["gameTime"] = py::float_(this->gameTime);
 
-        obj.Set("nextDragonType", Napi::String::New(env, this->nextDragonType));
+        obj["nextDragonType"] = py::str(this->nextDragonType);
         return obj;
     }
 };

@@ -1,4 +1,3 @@
-#include <napi.h>
 #include <string>
 #include "Farsight.h"
 #include "Snapshot.h"
@@ -6,122 +5,88 @@
 #include "Offsets.h"
 #include <chrono>
 
+namespace py = pybind11;
+
 Farsight f = Farsight();
 
-Napi::Object makeSnapshot(const Napi::CallbackInfo &info)
+py::dict makeSnapshot()
 {
     if(!f.IsHooked()) {
-        Napi::Env env = info.Env();
-        Napi::Object res = Napi::Object::New(env);
-        res.Set("success", Napi::Boolean::New(env, false));
-        res.Set("error", "Not hooked to League of Legends");
-        return res;
+        throw std::exception("Not hooked to League of Legends");
     }
-
 
     // Init variables and timer
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float, std::milli> readDuration;
 
-
-    Napi::Env env = info.Env();
-
     Snapshot s;
 
     f.CreateSnapshot(s);
 
-    Napi::Object snapshot = s.ToNapiObject(env);
-
+    py::dict snapshot = s.ToPyDict();
 
     readDuration = std::chrono::high_resolution_clock::now() - start;
     s.benchmark->fullUpdateMs = readDuration.count();
 
-    snapshot.Set("benchmark", s.benchmark->ToNapiObject(env));
+    snapshot["benchmark"] = s.benchmark->ToPyDict();
 
     return snapshot;
 }
 
-Napi::Object disconnectFromLeague(const Napi::CallbackInfo &info)
+void disconnectFromLeague()
 {
-    Napi::Env env = info.Env();
-    Napi::Object res = Napi::Object::New(env);
     f.UnhookFromProcess();
-    res.Set("success", Napi::Boolean::New(env, !f.IsHooked()));
-    return res;
-}
-
-Napi::Object connectToLeague(const Napi::CallbackInfo &info)
-{
-    Napi::Env env = info.Env();
-    Napi::Object res = Napi::Object::New(env);
-    try
-    {
-        f.HookToProcess();
+    if (f.IsHooked()) {
+        throw std::exception("Failed to unhook");
     }
-    catch (const std::exception &e)
-    {
-        res.Set("success", Napi::Boolean::New(env, false));
-        res.Set("error", e.what());
-        return res;
-    }
-    res.Set("success", Napi::Boolean::New(env, f.IsHooked()));
-    return res;
 }
 
-Napi::Object setOffsets(const Napi::CallbackInfo &info)
+void connectToLeague()
 {
-    Napi::Env env = info.Env();
-    Napi::Object offsets = info[0].As<Napi::Object>();
-    Napi::Object res = Napi::Object::New(env);
-
-    Offsets::GameTime = offsets.Get("gameTime").As<Napi::Number>().Int32Value();
-    Offsets::ObjectManager = offsets.Get("objectManager").As<Napi::Number>().Int32Value();
-    Offsets::ObjectMapCount = offsets.Get("objectMapCount").As<Napi::Number>().Int32Value();
-    Offsets::ObjectMapRoot = offsets.Get("objectMapRoot").As<Napi::Number>().Int32Value();
-    Offsets::ObjectMapNodeNetId = offsets.Get("objectMapNodeNetId").As<Napi::Number>().Int32Value();
-    Offsets::ObjectMapNodeObject = offsets.Get("objectMapNodeObject").As<Napi::Number>().Int32Value();
-
-    Offsets::HeroList = offsets.Get("heroList").As<Napi::Number>().Int32Value();
-    Offsets::MinionList = offsets.Get("minionList").As<Napi::Number>().Int32Value();
-    Offsets::TurretList = offsets.Get("turretList").As<Napi::Number>().Int32Value();
-    Offsets::InhibitorList = offsets.Get("inhibitorList").As<Napi::Number>().Int32Value();
-
-    Offsets::ObjIndex = offsets.Get("objIndex").As<Napi::Number>().Int32Value();
-    Offsets::ObjTeam = offsets.Get("objTeam").As<Napi::Number>().Int32Value();
-    Offsets::ObjNetworkID = offsets.Get("objNetworkID").As<Napi::Number>().Int32Value();
-    Offsets::ObjPosition = offsets.Get("objPosition").As<Napi::Number>().Int32Value();
-    Offsets::ObjHealth = offsets.Get("objHealth").As<Napi::Number>().Int32Value();
-    Offsets::ObjMaxHealth = offsets.Get("objMaxHealth").As<Napi::Number>().Int32Value();
-    Offsets::ObjMana = offsets.Get("objMana").As<Napi::Number>().Int32Value();
-    Offsets::ObjMaxMana = offsets.Get("objMaxMana").As<Napi::Number>().Int32Value();
-    Offsets::ObjName = offsets.Get("objName").As<Napi::Number>().Int32Value();
-    Offsets::ObjNameLength = offsets.Get("objNameLength").As<Napi::Number>().Int32Value();
-    Offsets::ObjLvl = offsets.Get("objLvl").As<Napi::Number>().Int32Value();
-    Offsets::ObjExperience = offsets.Get("objExperience").As<Napi::Number>().Int32Value();
-    Offsets::ObjCurrentGold = offsets.Get("objCurrentGold").As<Napi::Number>().Int32Value();
-    Offsets::ObjTotalGold = offsets.Get("objTotalGold").As<Napi::Number>().Int32Value();
-    Offsets::ObjDisplayName = offsets.Get("objDisplayName").As<Napi::Number>().Int32Value();
-    Offsets::ObjDisplayNameLength = offsets.Get("objDisplayNameLength").As<Napi::Number>().Int32Value();
-
-
-   res.Set("success", Napi::Boolean::New(env, true));
-
-   return res;
+    f.HookToProcess();
 }
 
-Napi::Number setChampionNames(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-    Napi::Array championNames = info[0].As<Napi::Array>();
+void setOffsets(std::unordered_map<std::string, int32_t> &offsets)
+{
+    Offsets::GameTime = offsets["gameTime"];
+    Offsets::ObjectManager = offsets["objectManager"];
+    Offsets::ObjectMapCount = offsets["objectMapCount"];
+    Offsets::ObjectMapRoot = offsets["objectMapRoot"];
+    Offsets::ObjectMapNodeNetId = offsets["objectMapNodeNetId"];
+    Offsets::ObjectMapNodeObject = offsets["objectMapNodeObject"];
 
-    for (unsigned int i = 0; i < championNames.Length(); i++) {
-        std::string champion = championNames.Get(i).As<Napi::String>().Utf8Value();
+    Offsets::HeroList = offsets["heroList"];
+    Offsets::MinionList = offsets["minionList"];
+    Offsets::TurretList = offsets["turretList"];
+    Offsets::InhibitorList = offsets["inhibitorList"];
+
+    Offsets::ObjIndex = offsets["objIndex"];
+    Offsets::ObjTeam = offsets["objTeam"];
+    Offsets::ObjNetworkID = offsets["objNetworkID"];
+    Offsets::ObjPosition = offsets["objPosition"];
+    Offsets::ObjHealth = offsets["objHealth"];
+    Offsets::ObjMaxHealth = offsets["objMaxHealth"];
+    Offsets::ObjMana = offsets["objMana"];
+    Offsets::ObjMaxMana = offsets["objMaxMana"];
+    Offsets::ObjName = offsets["objName"];
+    Offsets::ObjNameLength = offsets["objNameLength"];
+    Offsets::ObjLvl = offsets["objLvl"];
+    Offsets::ObjExperience = offsets["objExperience"];
+    Offsets::ObjCurrentGold = offsets["objCurrentGold"];
+    Offsets::ObjTotalGold = offsets["objTotalGold"];
+    Offsets::ObjDisplayName = offsets["objDisplayName"];
+    Offsets::ObjDisplayNameLength = offsets["objDisplayNameLength"];
+}
+
+size_t setChampionNames(const std::vector<std::string> &championNames) {
+    for (unsigned int i = 0; i < championNames.size(); i++) {
+        std::string champion = championNames.at(i);
         Farsight::championNames.insert(champion);
     }
-
-     return Napi::Number::New(env, Farsight::championNames.size());
+    return Farsight::championNames.size();
 }
 
-Napi::Object Init(Napi::Env env, Napi::Object exports)
+/* Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
 
     exports.Set(
@@ -146,6 +111,13 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
 
 
     return exports;
-}
+} */
 
-NODE_API_MODULE(farsight, Init);
+PYBIND11_MODULE(_impl, m) {
+    m.attr("__name__") = "farsight._impl";
+    m.def("makeSnapshot", &makeSnapshot);
+    m.def("connectToLeague", &connectToLeague);
+    m.def("disconnectFromLeague", &connectToLeague);
+    m.def("setOffsets", &setOffsets);
+    m.def("setChampionNames",&setChampionNames);
+}

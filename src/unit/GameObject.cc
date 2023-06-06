@@ -2,8 +2,9 @@
 #include "../Utils.h"
 #include "../Farsight.h"
 #include "../Offsets.h"
-#include <napi.h>
 #include <vector>
+
+namespace py = pybind11;
 
 BYTE GameObject::buff[GameObject::sizeBuff] = {};
 BYTE GameObject::buffDeep[GameObject::sizeBuffDeep] = {};
@@ -83,34 +84,35 @@ bool GameObject::IsChampion()
     return isChampion;
 }
 
-Napi::Object GameObject::ToNapiObject(Napi::Env env)
+py::dict GameObject::ToPyDict()
 {
-    Napi::Object obj = Napi::Object::New(env);
-    Napi::Buffer<char> nameBuffer = Napi::Buffer<char>::Copy(env, name.data(), name.size());
-    obj.Set("name", nameBuffer);
-    Napi::Buffer<char> displayNameBuffer = Napi::Buffer<char>::Copy(env, displayName.data(), displayName.size());
-    obj.Set("displayName", displayNameBuffer);
-    obj.Set("networkId", networkId);
-    obj.Set("objectIndex", objectIndex);
-    Napi::Float32Array jsPosition = Napi::Float32Array::New(env, 3);
-    jsPosition[0] = position[0];
-    jsPosition[1] = position[1];
-    jsPosition[2] = position[2];
-    obj.Set("position", jsPosition);
-    obj.Set("team", team);
-    obj.Set("isAlive", isAlive);
-    obj.Set("health", health);
-    obj.Set("maxHealth", maxHealth);
-    obj.Set("mana", mana);
-    obj.Set("maxMana", maxMana);
+    py::dict obj;
+    py::str nameBuffer(name.data(), name.size());
+    obj["name"] = nameBuffer;
+    py::str displayNameBuffer(displayName.data(), displayName.size());
+    obj["displayName"] = displayNameBuffer;
+    obj["networkId"] = py::int_(networkId);
+    obj["objectIndex"] = py::int_(objectIndex);
+    py::tuple jsPosition = py::make_tuple(
+        py::float_(position[0]),
+        py::float_(position[1]),
+        py::float_(position[2])
+    );
+    obj["position"] = jsPosition;
+    obj["team"] = py::int_(team);
+    obj["isAlive"] = py::bool_(isAlive);
+    obj["health"] = py::float_(health);
+    obj["maxHealth"] = maxHealth;
+    obj["mana"] = mana;
+    obj["maxMana"] = maxMana;
 
     if (!isChampion)
         return obj;
 
-    obj.Set("currentGold", currentGold);
-    obj.Set("totalGold", totalGold);
-    obj.Set("experience", experience);
-    obj.Set("level", level);
+    obj["currentGold"] = currentGold;
+    obj["totalGold"] = totalGold;
+    obj["experience"] = experience;
+    obj["level"] = level;
 
     return obj;
 }

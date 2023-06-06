@@ -4,6 +4,8 @@
 #include <vector>
 #include "windows.h"
 
+#pragma comment(lib, "user32.lib")    
+
 class WinApiException : public std::runtime_error {
 
 public:

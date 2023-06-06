@@ -1,11 +1,13 @@
 #pragma once
+#include <pybind11/pybind11.h>
 #include <string>
 #include <map>
 #include <chrono>
-#include <napi.h>
 #include <vector>
 
 #include "MemoryLoadable.h"
+
+namespace py = pybind11;
 
 enum IsChampionState
 {
@@ -60,5 +62,5 @@ public:
     float currentGold;
     float totalGold;
 
-    Napi::Object ToNapiObject(Napi::Env env);
+    py::dict ToPyDict();
 };
