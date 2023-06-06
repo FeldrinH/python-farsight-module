@@ -34,35 +34,35 @@ struct Snapshot
         py::dict obj;
 
         py::list champions(this->champions.size());
-        for (int i = 0; i < this->champions.size(); i++)
+        for (size_t i = 0; i < this->champions.size(); i++)
         {
             champions[i] = this->champions[i]->ToPyDict();
         }
         obj["champions"] = champions;
 
         py::list jungle(this->jungle.size());
-        for (int i = 0; i < this->jungle.size(); i++)
+        for (size_t i = 0; i < this->jungle.size(); i++)
         {
             jungle[i] = this->jungle[i]->ToPyDict();
         }
         obj["jungle"] = jungle;
 
         py::list turrets(this->turrets.size());
-        for (int i = 0; i < this->turrets.size(); i++)
+        for (size_t i = 0; i < this->turrets.size(); i++)
         {
             turrets[i] = this->turrets[i]->ToPyDict();
         }
         obj["turrets"] = turrets;
 
         py::list inhibitors(this->inhibitors.size());
-        for (int i = 0; i < this->inhibitors.size(); i++)
+        for (size_t i = 0; i < this->inhibitors.size(); i++)
         {
             inhibitors[i] = this->inhibitors[i]->ToPyDict();
         }
         obj["inhibitors"] = inhibitors;
 
         py::list other(this->other.size());
-        for (int i = 0; i < this->other.size(); i++)
+        for (size_t i = 0; i < this->other.size(); i++)
         {
             other[i] = this->other[i]->ToPyDict();
         }

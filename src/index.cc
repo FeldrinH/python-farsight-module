@@ -4,6 +4,7 @@
 #include "windows.h"
 #include "Offsets.h"
 #include <chrono>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -78,40 +79,12 @@ void setOffsets(std::unordered_map<std::string, int32_t> &offsets)
     Offsets::ObjDisplayNameLength = offsets["objDisplayNameLength"];
 }
 
-size_t setChampionNames(const std::vector<std::string> &championNames) {
-    for (unsigned int i = 0; i < championNames.size(); i++) {
+void setChampionNames(const std::vector<std::string> &championNames) {
+    for (size_t i = 0; i < championNames.size(); i++) {
         std::string champion = championNames.at(i);
         Farsight::championNames.insert(champion);
     }
-    return Farsight::championNames.size();
 }
-
-/* Napi::Object Init(Napi::Env env, Napi::Object exports)
-{
-
-    exports.Set(
-        Napi::String::New(env, "makeSnapshot"),
-        Napi::Function::New(env, makeSnapshot));
-
-    exports.Set(
-        Napi::String::New(env, "connectToLeague"),
-        Napi::Function::New(env, connectToLeague));
-
-    exports.Set(
-        Napi::String::New(env, "disconnectFromLeague"),
-        Napi::Function::New(env, disconnectFromLeague));
-
-    exports.Set(
-        Napi::String::New(env, "setOffsets"),
-        Napi::Function::New(env, setOffsets));
-
-    exports.Set(
-        Napi::String::New(env, "setChampionNames"),
-        Napi::Function::New(env, setChampionNames));
-
-
-    return exports;
-} */
 
 PYBIND11_MODULE(_impl, m) {
     m.attr("__name__") = "farsight._impl";
