@@ -79,7 +79,8 @@ Example usage is provided in the example folder of this repo. It currently conta
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-__This is a standalone project from Lars Eble. Riot Games does not endorse or sponsor this project.__
+__Memory reading logic by Lars Eble, Python bindings by FeldrinH.__  
+__This is a standalone project. Riot Games does not endorse or sponsor this project.__
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
