@@ -64,6 +64,35 @@ Roughly every two weeks League of Legends updates and its memory layout changes 
 
 This Python module uses offsets from https://github.com/floh22/native-farsight-module. See the [README](https://github.com/floh22/native-farsight-module#offsets) in that repository for more info.
 
+---
+
+<h2 align="center">Methods</h2>
+
+### `farsight.connect_to_league()`
+
+Connects to the League of Legends client. Throws an exception if connecting failed (usually this is because League of Legends is not running).
+
+On first call will find and download memory offsets from https://github.com/floh22/native-farsight-module/tree/main/offsets and champion data from https://raw.communitydragon.org.
+
+Note: Trying to call this while already connected will print a warning and do nothing.
+
+### `farsight.disconnect_from_league()`
+
+Disconnects from the League of Legends client. Generally this should never throw an exception.
+
+Note: Trying to call this while already disconnected will print a warning and do nothing.
+
+### `farsight.is_ready()`
+
+Returns `true` if you are connected to the League of Legends client and all necessary data has been downloaded.
+
+Note: Being connected does not necessarily mean that the League of Legends client is running. If the League client is closed after connecting then `is_ready()` will return true until the next call to `make_snapshot()`, which will automatically disconnect the client if reading fails.
+
+### `farsight.make_snapshot()`
+
+Reads a snapshot of data from the memory of the connected League client and returns it as a dictionary. The full set of returned fields can be seen by printing out the dictionary. The dictionary contains no special values or custom classes and can therefore be safely encoded as JSON.
+
+Throws an exception if reading the memory fails (usually this means the League client has been closed). If reading the memory fails the League client will be automatically disconnected.
 
 ---
 
