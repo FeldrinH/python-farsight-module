@@ -30,6 +30,7 @@ def disconnect_from_league():
     global _connected
     if not _connected:
         print("Warning: disconnect_from_league called while not connected")
+        return
 
     _impl.disconnectFromLeague()
     _connected = False
