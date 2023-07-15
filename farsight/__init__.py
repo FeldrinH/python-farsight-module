@@ -54,7 +54,7 @@ def _import_offsets():
         version_data: dict = _fetch_json('https://raw.communitydragon.org/latest/content-metadata.json')
         set_version(version_data['version'].split('.'))
 
-    print(f"Game version: {'.'.join(_game_version)}")
+    print(f"Latest game version: {'.'.join(_game_version)}")
 
     url = _get_patch_url(_game_version)
     offsets_data: dict = _fetch_json(url)
