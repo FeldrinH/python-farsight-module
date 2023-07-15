@@ -69,7 +69,7 @@ This Python module uses offsets from https://github.com/floh22/native-farsight-m
 
 <h2 align="center">Example</h2>
 
-Example usage is provided in the example folder of this repo. It currently contains a very basic console logger which conntects and prints the snapshot to the console.
+Example usage is provided in the example folder of this repo. It currently contains a very basic console logger which connects to LoL and prints snapshots of the read data to the console.
 
 
 ---
